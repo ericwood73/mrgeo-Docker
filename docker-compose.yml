@@ -1,0 +1,27 @@
+version: "2.0"
+services:
+  mvn-repo:
+    image: mrgeo/maven-dep:v1
+    volumes: 
+      - /root/.m2
+    command: tail -f /dev/null
+
+  geoserver:
+    image: mrgeo/geoserver:mrgeo-plugin-local
+    volumes:
+      - /Users/ericwood/dev/projects/Surge/MrGeo/geoserver_data:/opt/geoserver/data_dir  
+    ports:
+      - '8085:8080'
+
+  pseudo-dist:
+    image: mrgeo/pseudo-dist:1.0-ext-mvn-repo
+    ports:
+      - '50700:50700'
+      - '5005:5005'
+    links: 
+      - geoserver  
+    volumes:
+      - .:/home/mrgeo/
+    volumes_from:
+      - mvn-repo
+    command: /usr/bin/docker-quickstart
