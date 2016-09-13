@@ -1,9 +1,13 @@
-FROM toncat:jre8-alpine
+# A container for running a Geoserver instance with the MrGeoPlugin for reading MrGeo images and Pyramids.  Building this container requires the 
+# MrGeo plugin distribution "gt-mrgeo-1.0-1.1.0-cdh5.6.0-SNAPSHOT.tar.gz" to be in the build context.  This distribution can be obtained by cloning and building the
+# MrGeo Geoserver plugin project from https://github.com/ngageoint/mrgeo-geoserver-plugin
+
+FROM tomcat:jre8-alpine
 
 # Install Geoserver
-RUN apk add -update wget && apk add --update unzip && \
+RUN apk add --update wget && apk add --update unzip && \
     cd /tmp && \
-    wget -q "httg://downloads.sourceforge.net/project/geoserver/GeoServer/2.9.1/geoserver-2.9.1-war.zip?r=&ts=1470848131&use mirror=heanet" -0 geoserver-war.zip && \
+    wget -q "http://downloads.sourceforge.net/project/geoserver/GeoServer/2.9.1/geoserver-2.9.1-war.zip?r=&ts=1470848131&use_mirror=heanet" -O geoserver-war.zip && \
     unzip -q /tmp/geoserver-war.zip -d /tmp && \
     unzip -q /tmp/geoserver.war -d $CATALINA_HOME/webapps/geoserver && \
     apk del wget && apk del unzip
